@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Listener - 系統流程圖測試</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h2 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+        }
+
+        nav li a {
+            display: block;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border-left: 3px solid #667eea;
+        }
+
+        nav li a:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .flowchart-section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .flowchart-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .mermaid {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .status.error {
+            background: #f44336;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 24px;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="status" class="status">載入中...</div>
+
+    <div class="container">
+        <header>
+            <h1>📊 Blockchain Listener - 系統流程圖</h1>
+            <p>完整的系統架構與流程可視化 | Mermaid v10.6.1</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">⚡ 自動生成於 2025/10/30 下午8:16:55</p>
+        </header>
+
+        <nav id="toc">
+            <h2>📑 目錄</h2>
+            <ul>
+                <li><a href="#flowchart-1">1. 交易監聽完整流程</a></li>
+                <li><a href="#flowchart-2">2. ERC20 代幣監聽流程</a></li>
+                <li><a href="#flowchart-3">3. 原生代幣監聽流程</a></li>
+                <li><a href="#flowchart-4">4. 交易整合流程</a></li>
+                <li><a href="#flowchart-5">5. API 請求流程</a></li>
+                <li><a href="#flowchart-6">6. Rescan Consumer 流程</a></li>
+                <li><a href="#flowchart-7">7. Balance Consumer 流程</a></li>
+                <li><a href="#flowchart-8">8. Consolidate Scheduler 流程</a></li>
+                <li><a href="#flowchart-9">9. 系統啟動流程</a></li>
+                <li><a href="#flowchart-10">10. 錢包餘額更新流程</a></li>
+            </ul>
+        </nav>
+
+        <section id="flowchart-1" class="flowchart-section">
+            <h2>1. 交易監聽完整流程</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([開始]) --> LoadWallets[載入錢包地址到記憶體<br/>walletSingleton.loadWallets]
+    LoadWallets --> InitScheduler{選擇 Scheduler}
+
+    InitScheduler -->|ERC20 代幣| ERC20Scheduler[ERC20 Transfer Scheduler]
+    InitScheduler -->|原生代幣| ProtocolScheduler[Protocol Transfer Scheduler]
+
+    ERC20Scheduler --> GetLastBlock1[從 DB 讀取<br/>last_block_numbers]
+    ProtocolScheduler --> GetLastBlock2[從 DB 讀取<br/>last_block_numbers]
+
+    GetLastBlock1 --> QueryLogs[eth_getLogs<br/>查詢 Transfer 事件]
+    GetLastBlock2 --> QueryBlocks[eth_getBlockByNumber<br/>查詢區塊交易]
+
+    QueryLogs --> ParseEvents[解析 Transfer 事件<br/>from, to, value]
+    QueryBlocks --> TraceTransaction[debug_traceTransaction<br/>追蹤內部交易]
+
+    ParseEvents --> CheckWallet1{to 地址是否<br/>為系統錢包?}
+    TraceTransaction --> CheckWallet2{to 地址是否<br/>為系統錢包?}
+
+    CheckWallet1 -->|是| SendKafka1[發送到 Kafka<br/>Topic: rescan]
+    CheckWallet1 -->|否| UpdateBlock1[更新 last_block_numbers]
+    CheckWallet2 -->|是| SendKafka2[發送到 Kafka<br/>Topic: rescan]
+    CheckWallet2 -->|否| UpdateBlock2[更新 last_block_numbers]
+
+    SendKafka1 --> UpdateBlock1
+    SendKafka2 --> UpdateBlock2
+
+    UpdateBlock1 --> Sleep1[等待下一個週期<br/>15-30秒]
+    UpdateBlock2 --> Sleep2[等待下一個週期<br/>15-30秒]
+
+    Sleep1 --> GetLastBlock1
+    Sleep2 --> GetLastBlock2
+
+    SendKafka1 -.Kafka 消息.-> RescanConsumer[Rescan Consumer]
+    SendKafka2 -.Kafka 消息.-> RescanConsumer
+
+    RescanConsumer --> FetchTx[查詢完整交易資料<br/>getTransaction<br/>getTransactionReceipt]
+    FetchTx --> SaveTx[INSERT INTO<br/>received_transactions]
+    SaveTx --> SendBalance[發送到 Kafka<br/>Topic: balance]
+    SendBalance -.Kafka 消息.-> BalanceConsumer[Balance Consumer]
+
+    BalanceConsumer --> QueryBalance[查詢鏈上餘額<br/>eth_getBalance or<br/>balanceOf]
+    QueryBalance --> UpdateBalance[UPDATE<br/>wallet_balances]
+    UpdateBalance --> End([完成])
+
+    style Start fill:#90EE90
+    style End fill:#FFB6C1
+    style ERC20Scheduler fill:#87CEEB
+    style ProtocolScheduler fill:#87CEEB
+    style RescanConsumer fill:#DDA0DD
+    style BalanceConsumer fill:#DDA0DD
+    style SendKafka1 fill:#FFD700
+    style SendKafka2 fill:#FFD700
+    style SendBalance fill:#FFD700
+            </div>
+        </section>
+
+        <section id="flowchart-2" class="flowchart-section">
+            <h2>2. ERC20 代幣監聽流程</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([ERC20 Transfer Scheduler<br/>啟動]) --> HealthCheck[啟動健康檢查<br/>HealthCheck.start]
+    HealthCheck --> LoadConfig[載入配置<br/>networkDAO.loadById<br/>tokenDAO.loadById]
+    LoadConfig --> GetLastBlock[讀取上次掃描區塊<br/>lastBlockNumberDAO]
+
+    GetLastBlock --> GetCurrentBlock[查詢當前區塊高度<br/>provider.getBlockNumber]
+    GetCurrentBlock --> CheckGap{是否有區塊<br/>需要掃描?}
+
+    CheckGap -->|否| Sleep[等待 15 秒]
+    Sleep --> GetCurrentBlock
+
+    CheckGap -->|是| CalcRange[計算掃描範圍<br/>fromBlock to toBlock<br/>最多 1000 區塊]
+
+    CalcRange --> GetLogs[eth_getLogs<br/>查詢 Transfer 事件]
+    GetLogs --> CheckEmpty{有找到<br/>事件嗎?}
+
+    CheckEmpty -->|否| UpdateLast1[更新 last_block_numbers]
+    UpdateLast1 --> Sleep
+
+    CheckEmpty -->|是| LoopLogs[遍歷每個 Transfer 事件]
+    LoopLogs --> DecodeLog[解碼事件參數<br/>from = topics-1<br/>to = topics-2<br/>value = data]
+
+    DecodeLog --> CheckAddress{to 地址是否為<br/>Bitopro 或<br/>Worldpay 錢包?}
+
+    CheckAddress -->|否| NextLog{還有其他<br/>事件嗎?}
+    CheckAddress -->|是| CheckDuplicate{檢查 DB 是否<br/>已存在此交易?}
+
+    CheckDuplicate -->|已存在| NextLog
+    CheckDuplicate -->|不存在| PrepareMessage[準備 Kafka 消息<br/>networkId, tokenId<br/>txHash, blockNumber]
+
+    PrepareMessage --> SendKafka[發送到 Kafka<br/>Topic: rescan]
+    SendKafka --> LogInfo[記錄日誌<br/>scheduleLog.info]
+    LogInfo --> NextLog
+
+    NextLog -->|是| LoopLogs
+    NextLog -->|否| UpdateLast2[更新 last_block_numbers<br/>到 toBlock]
+
+    UpdateLast2 --> Sleep
+
+    style Start fill:#90EE90
+    style GetLogs fill:#87CEEB
+    style SendKafka fill:#FFD700
+    style CheckAddress fill:#FFA07A
+    style Sleep fill:#D3D3D3
+            </div>
+        </section>
+
+        <section id="flowchart-3" class="flowchart-section">
+            <h2>3. 原生代幣監聽流程</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([Protocol Transfer Scheduler<br/>啟動]) --> HealthCheck[啟動健康檢查]
+    HealthCheck --> LoadNetwork[載入網路配置<br/>networkDAO.loadById]
+    LoadNetwork --> GetLastBlock[讀取上次掃描區塊]
+
+    GetLastBlock --> GetCurrentBlock[查詢當前區塊高度]
+    GetCurrentBlock --> CheckGap{是否有區塊<br/>需要掃描?}
+
+    CheckGap -->|否| Sleep[等待 15 秒]
+    Sleep --> GetCurrentBlock
+
+    CheckGap -->|是| GetBlock[eth_getBlockByNumber<br/>查詢區塊資料]
+    GetBlock --> CheckTxs{區塊中有<br/>交易嗎?}
+
+    CheckTxs -->|否| UpdateBlock1[更新 last_block_numbers]
+    UpdateBlock1 --> Sleep
+
+    CheckTxs -->|是| LoopTxs[遍歷區塊中的交易]
+    LoopTxs --> TraceTx[debug_traceTransaction<br/>追蹤交易調用]
+
+    TraceTx --> CheckResult{Trace 成功?}
+    CheckResult -->|否| NextTx1{還有其他<br/>交易嗎?}
+
+    CheckResult -->|是| CheckType{交易類型<br/>是 CALL?}
+    CheckType -->|否| NextTx1
+
+    CheckType -->|是| CheckToAddress{to 地址是否為<br/>系統錢包?}
+    CheckToAddress -->|否| CheckCalls{有 calls<br/>內部調用?}
+
+    CheckToAddress -->|是| RecordMain[記錄主交易]
+    RecordMain --> CheckCalls
+
+    CheckCalls -->|否| NextTx2{還有其他<br/>交易嗎?}
+    CheckCalls -->|是| LoopCalls[遍歷內部調用]
+
+    LoopCalls --> CheckInternalAddress{內部調用 to<br/>是系統錢包?}
+    CheckInternalAddress -->|否| NextCall{還有其他<br/>調用嗎?}
+    CheckInternalAddress -->|是| RecordInternal[記錄內部交易]
+
+    RecordInternal --> NextCall
+    NextCall -->|是| LoopCalls
+    NextCall -->|否| NextTx2
+
+    NextTx1 --> NextTx2
+    NextTx2 -->|是| LoopTxs
+    NextTx2 -->|否| CheckRecords{有需要處理的<br/>交易記錄?}
+
+    CheckRecords -->|否| UpdateBlock2[更新 last_block_numbers]
+    CheckRecords -->|是| SendKafka[批次發送到 Kafka<br/>Topic: rescan]
+
+    SendKafka --> UpdateBlock2
+    UpdateBlock2 --> Sleep
+
+    style Start fill:#90EE90
+    style TraceTx fill:#87CEEB
+    style SendKafka fill:#FFD700
+    style CheckToAddress fill:#FFA07A
+    style CheckInternalAddress fill:#FFA07A
+            </div>
+        </section>
+
+        <section id="flowchart-4" class="flowchart-section">
+            <h2>4. 交易整合流程</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([用戶請求整合]) --> APIRequest[POST /api/consolidate/create]
+    APIRequest --> Validate[驗證參數<br/>express-validator]
+
+    Validate --> CheckValid{參數有效?}
+    CheckValid -->|否| Return400[返回 400 錯誤]
+    Return400 --> End1([結束])
+
+    CheckValid -->|是| CheckOTP{需要 OTP<br/>驗證?}
+    CheckOTP -->|是| ValidateOTP[驗證 OTP<br/>otplib.verify]
+    ValidateOTP --> CheckOTPResult{OTP 正確?}
+    CheckOTPResult -->|否| Return401[返回 401 錯誤]
+    Return401 --> End1
+
+    CheckOTPResult -->|是| QueryWallet[查詢錢包資訊<br/>walletDAO.loadById]
+    CheckOTP -->|否| QueryWallet
+
+    QueryWallet --> QueryBalance[查詢鏈上餘額<br/>eth_getBalance 或<br/>balanceOf]
+    QueryBalance --> CheckBalance{餘額是否<br/>足夠?}
+
+    CheckBalance -->|否| ReturnInsufficient[返回餘額不足錯誤]
+    ReturnInsufficient --> End1
+
+    CheckBalance -->|是| EstimateGas[估算 Gas 費用<br/>eth_estimateGas]
+    EstimateGas --> CalcAmount[計算實際轉帳金額<br/>balance - gas]
+
+    CalcAmount --> BuildTx[建立交易物件<br/>from, to, value<br/>gasPrice, nonce]
+    BuildTx --> InsertQueue[INSERT INTO<br/>queued_transactions<br/>state: pending]
+
+    InsertQueue --> ReturnSuccess[返回成功<br/>queuedTransactionId]
+    ReturnSuccess --> End2([API 完成])
+
+    InsertQueue -.定時掃描.-> Scheduler[Consolidate Transaction<br/>Scheduler]
+
+    Scheduler --> QueryPending[SELECT FROM<br/>queued_transactions<br/>WHERE state = pending]
+    QueryPending --> CheckQueue{有待處理<br/>交易?}
+
+    CheckQueue -->|否| SleepScheduler[等待 30 秒]
+    SleepScheduler --> QueryPending
+
+    CheckQueue -->|是| LoopQueue[遍歷待處理交易]
+    LoopQueue --> LoadPrivateKey[載入私鑰<br/>cipher.decrypt]
+    LoadPrivateKey --> SignTx[簽名交易<br/>wallet.signTransaction]
+
+    SignTx --> BroadcastTx[廣播交易<br/>eth_sendRawTransaction]
+    BroadcastTx --> CheckBroadcast{廣播成功?}
+
+    CheckBroadcast -->|否| UpdateFailed[UPDATE state = failed<br/>記錄錯誤原因]
+    UpdateFailed --> NextQueue1{還有其他<br/>交易?}
+
+    CheckBroadcast -->|是| UpdateBroadcast[UPDATE state = broadcast<br/>記錄 txHash]
+    UpdateBroadcast --> SendCallback[發送回調通知<br/>chainTransactionCallback]
+    SendCallback --> NextQueue1
+
+    NextQueue1 -->|是| LoopQueue
+    NextQueue1 -->|否| QueryBroadcast[SELECT FROM<br/>queued_transactions<br/>WHERE state = broadcast]
+
+    QueryBroadcast --> LoopBroadcast[遍歷已廣播交易]
+    LoopBroadcast --> GetReceipt[eth_getTransactionReceipt<br/>查詢交易收據]
+
+    GetReceipt --> CheckReceipt{交易已確認?}
+    CheckReceipt -->|否| NextQueue2{還有其他<br/>交易?}
+    CheckReceipt -->|是| CheckConfirm{確認數大於等於12?}
+
+    CheckConfirm -->|否| NextQueue2
+    CheckConfirm -->|是| CheckStatus{交易狀態<br/>success?}
+
+    CheckStatus -->|否| UpdateFailedOnchain[UPDATE state = failed<br/>標記鏈上失敗]
+    CheckStatus -->|是| UpdateConfirmed[UPDATE state = confirmed]
+
+    UpdateFailedOnchain --> SendCallback2[發送失敗回調]
+    UpdateConfirmed --> SendCallback3[發送成功回調]
+
+    SendCallback2 --> NextQueue2
+    SendCallback3 --> NextQueue2
+
+    NextQueue2 -->|是| LoopBroadcast
+    NextQueue2 -->|否| SleepScheduler
+
+    style Start fill:#90EE90
+    style End1 fill:#FFB6C1
+    style End2 fill:#FFB6C1
+    style APIRequest fill:#87CEEB
+    style Scheduler fill:#DDA0DD
+    style BroadcastTx fill:#FFD700
+    style CheckBalance fill:#FFA07A
+    style CheckConfirm fill:#FFA07A
+            </div>
+        </section>
+
+        <section id="flowchart-5" class="flowchart-section">
+            <h2>5. API 請求流程</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([客戶端發起請求]) --> HTTPRequest[HTTP Request<br/>GET/POST/PUT/DELETE]
+    HTTPRequest --> ExpressMiddleware[Express 中間件鏈]
+
+    ExpressMiddleware --> Log4js[Log4js<br/>記錄 HTTP 日誌]
+    Log4js --> Compression[Compression<br/>壓縮回應]
+    Compression --> BodyParser[Body Parser<br/>解析請求體]
+    BodyParser --> CookieParser[Cookie Parser<br/>解析 Cookie]
+    CookieParser --> SessionMiddleware[Session Middleware<br/>載入 Session]
+
+    SessionMiddleware --> Routing{路由匹配}
+
+    Routing -->|/api/blockchain| BlockchainRoute[blockchain.js]
+    Routing -->|/api/wallet| WalletRoute[wallet.js]
+    Routing -->|/api/transaction| TransactionRoute[transaction.js]
+    Routing -->|/api/listener| ListenerRoute[listener.js]
+    Routing -->|/api/consolidate| ConsolidateRoute[consolidate.js]
+    Routing -->|/api/misc| MiscRoute[misc.js]
+    Routing -->|/| IndexRoute[index.js]
+    Routing -->|其他| NotFound[404 Not Found]
+
+    BlockchainRoute --> RouteHandler[Route Handler<br/>處理請求參數]
+    WalletRoute --> RouteHandler
+    TransactionRoute --> RouteHandler
+    ListenerRoute --> RouteHandler
+    ConsolidateRoute --> RouteHandler
+    MiscRoute --> RouteHandler
+    IndexRoute --> RenderView[渲染 EJS 視圖]
+
+    RouteHandler --> Validator{需要參數<br/>驗證?}
+    Validator -->|是| ExpressValidator[express-validator<br/>驗證參數]
+    ExpressValidator --> CheckValidation{驗證通過?}
+    CheckValidation -->|否| ReturnError[返回 400 錯誤]
+    ReturnError --> EndError([結束])
+
+    CheckValidation -->|是| CallService[調用 Service 層]
+    Validator -->|否| CallService
+
+    CallService --> ServiceLayer{選擇 Service}
+    ServiceLayer -->|blockchain| BlockchainService[blockchainService.js]
+    ServiceLayer -->|listener| ListenerService[listenerService.js]
+    ServiceLayer -->|consolidate| ConsolidateService[consolidateService.js]
+    ServiceLayer -->|notify| NotifyService[notifyService.js]
+    ServiceLayer -->|common| CommonService[commonService.js]
+
+    BlockchainService --> BusinessLogic[執行業務邏輯]
+    ListenerService --> BusinessLogic
+    ConsolidateService --> BusinessLogic
+    NotifyService --> BusinessLogic
+    CommonService --> BusinessLogic
+
+    BusinessLogic --> CallDAO[調用 DAO 層]
+    CallDAO --> DAOLayer{選擇 DAO}
+
+    DAOLayer -->|network| NetworkDAO[networkDAO.js]
+    DAOLayer -->|wallet| WalletDAO[walletDAO.js]
+    DAOLayer -->|token| TokenDAO[tokenDAO.js]
+    DAOLayer -->|transaction| TransactionDAO[receivedTransactionDAO.js]
+    DAOLayer -->|其他| OtherDAO[其他 DAO]
+
+    NetworkDAO --> KnexQuery[Knex.js 查詢]
+    WalletDAO --> KnexQuery
+    TokenDAO --> KnexQuery
+    TransactionDAO --> KnexQuery
+    OtherDAO --> KnexQuery
+
+    KnexQuery --> MySQL[MySQL 資料庫]
+    MySQL --> ReturnData[返回資料]
+
+    ReturnData --> ProcessData[Service 處理資料]
+    ProcessData --> SetPayload[設置 res.payload]
+    SetPayload --> ResponseMiddleware[Response 中間件]
+
+    ResponseMiddleware --> FormatLog[格式化日誌<br/>formatRequestAndResponse]
+    FormatLog --> SendJSON[res.json<br/>發送 JSON 回應]
+
+    RenderView --> SendHTML[res.render<br/>發送 HTML 回應]
+
+    SendJSON --> End([完成])
+    SendHTML --> End
+    NotFound --> EndError
+
+    style Start fill:#90EE90
+    style End fill:#FFB6C1
+    style EndError fill:#FF6347
+    style ExpressMiddleware fill:#87CEEB
+    style ServiceLayer fill:#DDA0DD
+    style DAOLayer fill:#98FB98
+    style MySQL fill:#FFD700
+            </div>
+        </section>
+
+        <section id="flowchart-6" class="flowchart-section">
+            <h2>6. Rescan Consumer 流程</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([Rescan Consumer<br/>啟動]) --> HealthCheck[啟動健康檢查]
+    HealthCheck --> LoadWallets[載入錢包地址<br/>walletSingleton.loadWallets]
+    LoadWallets --> ConnectKafka[連接 Kafka<br/>訂閱 Topic: rescan]
+
+    ConnectKafka --> WaitMessage[等待 Kafka 消息]
+    WaitMessage --> ReceiveMessage[接收消息]
+
+    ReceiveMessage --> ParseMessage[解析消息<br/>networkId, tokenId<br/>txHash, blockNumber]
+    ParseMessage --> CheckDuplicate{檢查 DB 是否<br/>已存在?}
+
+    CheckDuplicate -->|已存在| CommitOffset1[Commit Offset]
+    CommitOffset1 --> WaitMessage
+
+    CheckDuplicate -->|不存在| LoadConfig[載入網路和代幣配置<br/>networkDAO, tokenDAO]
+    LoadConfig --> GetTransaction[eth_getTransaction<br/>查詢交易資料]
+
+    GetTransaction --> CheckTxResult{查詢成功?}
+    CheckTxResult -->|否| LogError[記錄錯誤<br/>consumerLog.error]
+    LogError --> CommitOffset2[Commit Offset]
+    CommitOffset2 --> WaitMessage
+
+    CheckTxResult -->|是| GetReceipt[eth_getTransactionReceipt<br/>查詢交易收據]
+    GetReceipt --> CheckReceiptResult{查詢成功?}
+    CheckReceiptResult -->|否| LogError
+
+    CheckReceiptResult -->|是| CheckToken{是 ERC20<br/>代幣交易?}
+
+    CheckToken -->|是| DecodeInput[解碼 input data<br/>解析 transfer 參數]
+    DecodeInput --> ExtractERC20[提取交易資訊<br/>from, to, value<br/>contractAddress]
+
+    CheckToken -->|否| CheckNativeValue{交易value大於0?}
+    CheckNativeValue -->|否| CheckInternalTx{需要追蹤<br/>內部交易?}
+    CheckNativeValue -->|是| ExtractNative[提取原生代幣交易<br/>from, to, value]
+
+    CheckInternalTx -->|是| TraceTransaction[debug_traceTransaction<br/>追蹤內部交易]
+    TraceTransaction --> ParseInternalTx[解析內部調用<br/>遞迴處理 calls]
+    ParseInternalTx --> ExtractInternal[提取內部交易資訊]
+    ExtractInternal --> CheckWallet1{to 地址是<br/>系統錢包?}
+
+    CheckInternalTx -->|否| CommitOffset2
+
+    ExtractERC20 --> CheckWallet2{to 地址是<br/>系統錢包?}
+    ExtractNative --> CheckWallet3{to 地址是<br/>系統錢包?}
+
+    CheckWallet1 -->|否| CommitOffset2
+    CheckWallet2 -->|否| CommitOffset2
+    CheckWallet3 -->|否| CommitOffset2
+
+    CheckWallet1 -->|是| PrepareRecord1[準備資料庫記錄]
+    CheckWallet2 -->|是| PrepareRecord2[準備資料庫記錄]
+    CheckWallet3 -->|是| PrepareRecord3[準備資料庫記錄]
+
+    PrepareRecord1 --> InsertDB[INSERT INTO<br/>received_transactions]
+    PrepareRecord2 --> InsertDB
+    PrepareRecord3 --> InsertDB
+
+    InsertDB --> CheckInsert{插入成功?}
+    CheckInsert -->|否| LogError
+
+    CheckInsert -->|是| PrepareBalanceMsg[準備餘額更新消息<br/>walletId, networkId]
+    PrepareBalanceMsg --> SendBalanceKafka[發送到 Kafka<br/>Topic: balance]
+
+    SendBalanceKafka --> LogSuccess[記錄成功日誌<br/>consumerLog.info]
+    LogSuccess --> CommitOffset3[Commit Offset]
+    CommitOffset3 --> WaitMessage
+
+    style Start fill:#90EE90
+    style WaitMessage fill:#D3D3D3
+    style ReceiveMessage fill:#87CEEB
+    style InsertDB fill:#98FB98
+    style SendBalanceKafka fill:#FFD700
+    style CheckWallet1 fill:#FFA07A
+    style CheckWallet2 fill:#FFA07A
+    style CheckWallet3 fill:#FFA07A
+            </div>
+        </section>
+
+        <section id="flowchart-7" class="flowchart-section">
+            <h2>7. Balance Consumer 流程</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([Balance Consumer<br/>啟動]) --> HealthCheck[啟動健康檢查]
+    HealthCheck --> ConnectKafka[連接 Kafka<br/>訂閱 Topic: balance]
+
+    ConnectKafka --> WaitMessage[等待 Kafka 消息]
+    WaitMessage --> ReceiveMessage[接收消息]
+
+    ReceiveMessage --> ParseMessage[解析消息<br/>walletId, networkId<br/>tokenId-可選]
+    ParseMessage --> LoadWallet[查詢錢包資訊<br/>walletDAO.loadById]
+
+    LoadWallet --> CheckWallet{錢包存在?}
+    CheckWallet -->|否| LogError1[記錄錯誤<br/>錢包不存在]
+    LogError1 --> CommitOffset1[Commit Offset]
+    CommitOffset1 --> WaitMessage
+
+    CheckWallet -->|是| LoadNetwork[查詢網路配置<br/>networkDAO.loadById]
+    LoadNetwork --> CheckToken{是否查詢<br/>代幣餘額?}
+
+    CheckToken -->|否| QueryNativeBalance[查詢原生代幣餘額<br/>eth_getBalance]
+    CheckToken -->|是| LoadToken[查詢代幣配置<br/>tokenDAO.loadById]
+
+    LoadToken --> QueryTokenBalance[查詢 ERC20 餘額<br/>balanceOf<br/>contractAddress.balanceOf]
+
+    QueryNativeBalance --> CheckQueryResult1{查詢成功?}
+    QueryTokenBalance --> CheckQueryResult2{查詢成功?}
+
+    CheckQueryResult1 -->|否| LogError2[記錄錯誤<br/>RPC 查詢失敗]
+    CheckQueryResult2 -->|否| LogError2
+    LogError2 --> RetryCheck{重試次數<br/>小於3?}
+
+    RetryCheck -->|是| WaitRetry[等待 5 秒]
+    WaitRetry --> CheckToken
+    RetryCheck -->|否| CommitOffset2[Commit Offset<br/>標記失敗]
+    CommitOffset2 --> WaitMessage
+
+    CheckQueryResult1 -->|是| FormatBalance1[格式化餘額<br/>BigNumber 處理]
+    CheckQueryResult2 -->|是| FormatBalance2[格式化餘額<br/>除以 decimals]
+
+    FormatBalance1 --> CheckDBRecord[查詢 DB 餘額記錄<br/>walletBalanceDAO]
+    FormatBalance2 --> CheckDBRecord
+
+    CheckDBRecord --> CheckExists{記錄存在?}
+    CheckExists -->|否| InsertBalance[INSERT INTO<br/>wallet_balances]
+    CheckExists -->|是| CompareBalance{餘額有<br/>變化?}
+
+    CompareBalance -->|否| CommitOffset3[Commit Offset]
+    CompareBalance -->|是| UpdateBalance[UPDATE<br/>wallet_balances]
+
+    InsertBalance --> CreateSnapshot[INSERT INTO<br/>wallet_balance_snapshots<br/>記錄歷史快照]
+    UpdateBalance --> CreateSnapshot
+
+    CreateSnapshot --> CheckThreshold{餘額變化<br/>大於閾值?}
+    CheckThreshold -->|是| SendNotify[發送 Slack 通知<br/>slack.sendMessage]
+    CheckThreshold -->|否| LogInfo[記錄資訊日誌]
+
+    SendNotify --> LogInfo
+    LogInfo --> CommitOffset4[Commit Offset]
+
+    CommitOffset3 --> WaitMessage
+    CommitOffset4 --> WaitMessage
+
+    style Start fill:#90EE90
+    style WaitMessage fill:#D3D3D3
+    style ReceiveMessage fill:#87CEEB
+    style QueryNativeBalance fill:#98FB98
+    style QueryTokenBalance fill:#98FB98
+    style UpdateBalance fill:#FFD700
+    style SendNotify fill:#FF69B4
+            </div>
+        </section>
+
+        <section id="flowchart-8" class="flowchart-section">
+            <h2>8. Consolidate Scheduler 流程</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([Consolidate Transaction<br/>Scheduler 啟動]) --> HealthCheck[啟動健康檢查]
+    HealthCheck --> InitSchedule[初始化定時任務<br/>每 30 秒執行一次]
+
+    InitSchedule --> ScheduleTick[定時觸發]
+    ScheduleTick --> QueryPending[SELECT FROM<br/>queued_transactions<br/>WHERE state IN<br/>pending, broadcast]
+
+    QueryPending --> CheckEmpty{有待處理<br/>交易?}
+    CheckEmpty -->|否| Wait[等待下一個週期]
+    Wait --> ScheduleTick
+
+    CheckEmpty -->|是| GroupByState[按狀態分組<br/>pending 和 broadcast]
+
+    GroupByState --> ProcessPending[處理 pending 狀態]
+    ProcessPending --> LoopPending[遍歷 pending 交易]
+
+    LoopPending --> LoadTxData[載入交易資料<br/>wallet, network, token]
+    LoadTxData --> CheckExpiry{交易是否<br/>過期?}
+
+    CheckExpiry -->|是| UpdateExpired[UPDATE state = expired]
+    UpdateExpired --> NextPending{還有其他<br/>pending?}
+
+    CheckExpiry -->|否| GetNonce[查詢 nonce<br/>eth_getTransactionCount]
+    GetNonce --> GetGasPrice[查詢 Gas Price<br/>eth_gasPrice]
+    GetGasPrice --> BuildRawTx[建立原始交易<br/>to, value, gas<br/>gasPrice, nonce]
+
+    BuildRawTx --> LoadPrivateKey[載入私鑰<br/>cipher.decrypt]
+    LoadPrivateKey --> SignTx[簽名交易<br/>wallet.signTransaction]
+
+    SignTx --> BroadcastTx[廣播交易<br/>eth_sendRawTransaction]
+    BroadcastTx --> CheckBroadcast{廣播成功?}
+
+    CheckBroadcast -->|否| ParseError{解析錯誤<br/>類型}
+    ParseError -->|Nonce 錯誤| UpdateNonceError[記錄 Nonce 錯誤]
+    ParseError -->|Gas 不足| UpdateGasError[記錄 Gas 錯誤]
+    ParseError -->|其他| UpdateOtherError[記錄其他錯誤]
+
+    UpdateNonceError --> UpdateFailed[UPDATE state = failed]
+    UpdateGasError --> UpdateFailed
+    UpdateOtherError --> UpdateFailed
+    UpdateFailed --> NextPending
+
+    CheckBroadcast -->|是| UpdateBroadcast[UPDATE state = broadcast<br/>記錄 txHash, broadcastAt]
+    UpdateBroadcast --> LogBroadcast[記錄成功日誌]
+    LogBroadcast --> SendCallback1[調用提交回調<br/>submitCallback]
+    SendCallback1 --> NextPending
+
+    NextPending -->|是| LoopPending
+    NextPending -->|否| ProcessBroadcast[處理 broadcast 狀態]
+
+    ProcessBroadcast --> LoopBroadcast[遍歷 broadcast 交易]
+    LoopBroadcast --> GetReceipt[eth_getTransactionReceipt<br/>查詢交易收據]
+
+    GetReceipt --> CheckReceipt{收據存在?}
+    CheckReceipt -->|否| CheckTimeout{廣播後<br/>大於10分鐘?}
+    CheckTimeout -->|是| UpdateTimeout[UPDATE state = timeout]
+    CheckTimeout -->|否| NextBroadcast1{還有其他<br/>broadcast?}
+    UpdateTimeout --> NextBroadcast1
+
+    CheckReceipt -->|是| GetBlock[eth_getBlockByNumber<br/>查詢確認數]
+    GetBlock --> CalcConfirm[計算確認數<br/>currentBlock - txBlock]
+
+    CalcConfirm --> CheckConfirm{確認數大於等於12?}
+    CheckConfirm -->|否| UpdateConfirming[UPDATE 記錄當前確認數]
+    UpdateConfirming --> NextBroadcast1
+
+    CheckConfirm -->|是| CheckStatus{交易狀態<br/>success?}
+    CheckStatus -->|否| UpdateFailedOnchain[UPDATE state = failed<br/>標記鏈上失敗]
+    CheckStatus -->|是| UpdateConfirmed[UPDATE state = confirmed<br/>記錄 confirmedAt]
+
+    UpdateFailedOnchain --> SendCallback2[發送失敗回調<br/>chainTransactionCallback]
+    UpdateConfirmed --> SendCallback3[發送成功回調<br/>chainTransactionCallback]
+
+    SendCallback2 --> LogFailed[記錄失敗日誌]
+    SendCallback3 --> LogSuccess[記錄成功日誌]
+
+    LogFailed --> NextBroadcast2{還有其他<br/>broadcast?}
+    LogSuccess --> NextBroadcast2
+
+    NextBroadcast1 --> NextBroadcast2
+    NextBroadcast2 -->|是| LoopBroadcast
+    NextBroadcast2 -->|否| Wait
+
+    style Start fill:#90EE90
+    style ScheduleTick fill:#D3D3D3
+    style BroadcastTx fill:#FFD700
+    style UpdateBroadcast fill:#98FB98
+    style UpdateConfirmed fill:#98FB98
+    style UpdateFailed fill:#FF6347
+    style SendCallback1 fill:#FF69B4
+    style SendCallback2 fill:#FF69B4
+    style SendCallback3 fill:#FF69B4
+            </div>
+        </section>
+
+        <section id="flowchart-9" class="flowchart-section">
+            <h2>9. 系統啟動流程</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([系統啟動]) --> CheckComponent{啟動<br/>組件類型}
+
+    CheckComponent -->|Web API| StartWeb[啟動 Web Server]
+    CheckComponent -->|Scheduler| StartScheduler[啟動 Scheduler]
+    CheckComponent -->|Consumer| StartConsumer[啟動 Consumer]
+
+    StartWeb --> LoadEnv1[載入環境變數<br/>dotenv.config]
+    StartScheduler --> LoadEnv2[載入環境變數]
+    StartConsumer --> LoadEnv3[載入環境變數]
+
+    LoadEnv1 --> InitExpress[初始化 Express App]
+    InitExpress --> SetupMiddleware[設置中間件<br/>log4js, compression<br/>body-parser, session]
+
+    SetupMiddleware --> RegisterRoutes[註冊路由<br/>/api/blockchain<br/>/api/wallet 等]
+    RegisterRoutes --> SetupSwagger[設置 Swagger UI<br/>/api-docs]
+    SetupSwagger --> InitDB1[初始化 DB 連線<br/>libraries/mysql]
+
+    InitDB1 --> StartHTTP[啟動 HTTP Server<br/>監聽 Port 3000]
+    StartHTTP --> LogWebReady[記錄: Web API Ready]
+    LogWebReady --> EndWeb([Web API 運行中])
+
+    LoadEnv2 --> ParseArgs[解析命令行參數<br/>scheduler type + key]
+    ParseArgs --> ValidateArgs{參數有效?}
+
+    ValidateArgs -->|否| LogArgError[記錄錯誤並退出]
+    LogArgError --> EndError([啟動失敗])
+
+    ValidateArgs -->|是| InitHealthCheck1[初始化健康檢查<br/>HealthCheck.start]
+    InitHealthCheck1 --> InitDB2[初始化 DB 連線]
+    InitDB2 --> LoadWalletsScheduler[載入錢包地址<br/>walletSingleton.loadWallets]
+
+    LoadWalletsScheduler --> SelectScheduler{選擇<br/>Scheduler}
+    SelectScheduler -->|contract| LoadERC20[載入 ERC20 Scheduler<br/>根據 networkId + tokenId]
+    SelectScheduler -->|blockchain| LoadProtocol[載入 Protocol Scheduler<br/>根據 networkId]
+    SelectScheduler -->|consolidate| LoadConsolidate[載入 Consolidate Scheduler]
+
+    LoadERC20 --> StartCron1[啟動定時任務<br/>15-30秒週期]
+    LoadProtocol --> StartCron2[啟動定時任務<br/>15-30秒週期]
+    LoadConsolidate --> StartCron3[啟動定時任務<br/>30秒週期]
+
+    StartCron1 --> LogSchedulerReady[記錄: Scheduler Ready]
+    StartCron2 --> LogSchedulerReady
+    StartCron3 --> LogSchedulerReady
+    LogSchedulerReady --> EndScheduler([Scheduler 運行中])
+
+    LoadEnv3 --> ParseConsumerArgs[解析命令行參數<br/>consumer type]
+    ParseConsumerArgs --> ValidateConsumerArgs{參數有效?}
+
+    ValidateConsumerArgs -->|否| LogConsumerArgError[記錄錯誤並退出]
+    LogConsumerArgError --> EndError
+
+    ValidateConsumerArgs -->|是| CreateTopics[創建 Kafka Topics<br/>rescan, balance<br/>priority-rescan]
+    CreateTopics --> InitHealthCheck2[初始化健康檢查]
+    InitHealthCheck2 --> InitDB3[初始化 DB 連線]
+    InitDB3 --> LoadWalletsConsumer{需要載入<br/>錢包?}
+
+    LoadWalletsConsumer -->|是| LoadWallets[載入錢包地址<br/>walletSingleton.loadWallets]
+    LoadWalletsConsumer -->|否| InitKafka
+    LoadWallets --> InitKafka[初始化 Kafka 客戶端<br/>kafka.consumer.subscribe]
+
+    InitKafka --> SelectConsumer{選擇<br/>Consumer}
+    SelectConsumer -->|rescan| LoadRescan[載入 Rescan Consumer]
+    SelectConsumer -->|balance| LoadBalance[載入 Balance Consumer]
+    SelectConsumer -->|priority-rescan| LoadPriority[載入 Priority Rescan Consumer]
+
+    LoadRescan --> StartConsume1[開始消費消息<br/>consumer.run]
+    LoadBalance --> StartConsume2[開始消費消息]
+    LoadPriority --> StartConsume3[開始消費消息]
+
+    StartConsume1 --> LogConsumerReady[記錄: Consumer Ready]
+    StartConsume2 --> LogConsumerReady
+    StartConsume3 --> LogConsumerReady
+    LogConsumerReady --> EndConsumer([Consumer 運行中])
+
+    style Start fill:#90EE90
+    style EndWeb fill:#FFB6C1
+    style EndScheduler fill:#FFB6C1
+    style EndConsumer fill:#FFB6C1
+    style EndError fill:#FF6347
+    style StartHTTP fill:#87CEEB
+    style StartCron1 fill:#DDA0DD
+    style StartCron2 fill:#DDA0DD
+    style StartCron3 fill:#DDA0DD
+    style StartConsume1 fill:#98FB98
+    style StartConsume2 fill:#98FB98
+    style StartConsume3 fill:#98FB98
+            </div>
+        </section>
+
+        <section id="flowchart-10" class="flowchart-section">
+            <h2>10. 錢包餘額更新流程</h2>
+            <div class="mermaid">
+flowchart TD
+    Start([觸發餘額更新]) --> TriggerType{觸發來源}
+
+    TriggerType -->|Rescan Consumer| FromRescan[從 Rescan Consumer<br/>發送 Kafka 消息]
+    TriggerType -->|API 請求| FromAPI[API 主動查詢<br/>GET /api/wallet/balance]
+    TriggerType -->|定時任務| FromCron[定時全量更新<br/>批次處理所有錢包]
+
+    FromRescan --> SendKafka[發送到 Kafka<br/>Topic: balance]
+    FromAPI --> DirectQuery[直接查詢鏈上餘額]
+    FromCron --> BatchProcess[批次處理]
+
+    SendKafka --> BalanceConsumer[Balance Consumer<br/>接收消息]
+
+    BalanceConsumer --> LoadWalletInfo[載入錢包資訊<br/>walletDAO.loadById]
+    DirectQuery --> LoadWalletInfo
+    BatchProcess --> LoadAllWallets[載入所有錢包<br/>walletDAO.loadAll]
+
+    LoadAllWallets --> LoopWallets[遍歷所有錢包]
+    LoopWallets --> LoadWalletInfo
+
+    LoadWalletInfo --> LoadNetworkInfo[載入網路配置<br/>networkDAO.loadById]
+    LoadNetworkInfo --> CheckTokenId{是否為<br/>代幣?}
+
+    CheckTokenId -->|否| QueryNative[查詢原生代幣餘額<br/>eth_getBalance]
+    CheckTokenId -->|是| LoadTokenInfo[載入代幣配置<br/>tokenDAO.loadById]
+
+    LoadTokenInfo --> QueryERC20[查詢 ERC20 餘額<br/>contract.balanceOf]
+
+    QueryNative --> RPCRequest1[RPC 請求]
+    QueryERC20 --> RPCRequest2[RPC 請求]
+
+    RPCRequest1 --> CheckRPC1{RPC<br/>成功?}
+    RPCRequest2 --> CheckRPC2{RPC<br/>成功?}
+
+    CheckRPC1 -->|否| RetryRPC1[切換 RPC 節點<br/>重試最多 3 次]
+    CheckRPC2 -->|否| RetryRPC2[切換 RPC 節點<br/>重試最多 3 次]
+
+    RetryRPC1 --> CheckRetry1{重試次數<br/>小於3?}
+    RetryRPC2 --> CheckRetry2{重試次數<br/>小於3?}
+
+    CheckRetry1 -->|是| RPCRequest1
+    CheckRetry2 -->|是| RPCRequest2
+    CheckRetry1 -->|否| LogRPCFail1[記錄 RPC 失敗]
+    CheckRetry2 -->|否| LogRPCFail2[記錄 RPC 失敗]
+
+    LogRPCFail1 --> SendAlert1[發送 Slack 告警]
+    LogRPCFail2 --> SendAlert2[發送 Slack 告警]
+    SendAlert1 --> NextWallet1{還有其他<br/>錢包?}
+    SendAlert2 --> NextWallet1
+
+    CheckRPC1 -->|是| FormatBalance1[格式化餘額<br/>Wei to Ether]
+    CheckRPC2 -->|是| FormatBalance2[格式化餘額<br/>除以 decimals]
+
+    FormatBalance1 --> CheckDBBalance[查詢 DB 當前餘額<br/>walletBalanceDAO]
+    FormatBalance2 --> CheckDBBalance
+
+    CheckDBBalance --> CheckRecord{記錄<br/>存在?}
+
+    CheckRecord -->|否| InsertBalance[INSERT INTO<br/>wallet_balances<br/>wallet_id, network_id<br/>token_id, balance]
+
+    CheckRecord -->|是| CompareBalance{餘額<br/>變化?}
+
+    CompareBalance -->|否| NoChange[不更新 DB]
+    NoChange --> LogNoChange[記錄: 餘額未變化]
+    LogNoChange --> NextWallet2{還有其他<br/>錢包?}
+
+    CompareBalance -->|是| CalcDiff[計算差額<br/>newBalance - oldBalance]
+    CalcDiff --> UpdateBalance[UPDATE<br/>wallet_balances<br/>SET balance, updated_at]
+
+    InsertBalance --> InsertSnapshot[INSERT INTO<br/>wallet_balance_snapshots<br/>記錄歷史快照]
+    UpdateBalance --> InsertSnapshot
+
+    InsertSnapshot --> LogBalanceChange[記錄餘額變化<br/>consumerLog.info]
+    LogBalanceChange --> CheckThreshold{變化量<br/>大於閾值?}
+
+    CheckThreshold -->|是| SendNotify[發送 Slack 通知<br/>錢包餘額大幅變化]
+    CheckThreshold -->|否| CheckLowBalance{餘額<br/>小於最低值?}
+
+    SendNotify --> CheckLowBalance
+    CheckLowBalance -->|是| SendLowAlert[發送低餘額告警]
+    CheckLowBalance -->|否| NextWallet3{還有其他<br/>錢包?}
+
+    SendLowAlert --> NextWallet3
+
+    NextWallet1 --> NextWallet2
+    NextWallet2 --> NextWallet3
+    NextWallet3 -->|是| LoopWallets
+    NextWallet3 -->|否| UpdateCache[更新快取<br/>cache.set]
+
+    UpdateCache --> ReturnResult{回應來源}
+    ReturnResult -->|Kafka Consumer| CommitOffset[Commit Offset]
+    ReturnResult -->|API| ReturnJSON[返回 JSON 回應]
+    ReturnResult -->|定時任務| LogComplete[記錄完成日誌]
+
+    CommitOffset --> End([完成])
+    ReturnJSON --> End
+    LogComplete --> End
+
+    style Start fill:#90EE90
+    style End fill:#FFB6C1
+    style QueryNative fill:#87CEEB
+    style QueryERC20 fill:#87CEEB
+    style UpdateBalance fill:#FFD700
+    style InsertSnapshot fill:#98FB98
+    style SendNotify fill:#FF69B4
+    style SendLowAlert fill:#FF6347
+            </div>
+        </section>
+
+
+        <a href="#toc" class="back-to-top">↑</a>
+
+        <footer>
+            <p><strong>最後更新</strong>: 2025/10/30 | <strong>文件版本</strong>: v1.0.0</p>
+            <p>使用 <a href="https://mermaid.js.org/" target="_blank">Mermaid v10.6.1</a> 繪製</p>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #999;">由 generate-flowcharts-html.js 自動生成</p>
+        </footer>
+    </div>
+
+    <script>
+        // 初始化 Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            securityLevel: 'loose'
+        });
+
+        // 監聽 Mermaid 渲染事件
+        let renderedCount = 0;
+        const totalCharts = 10;
+        const statusEl = document.getElementById('status');
+
+        // 檢查渲染狀態
+        const checkRenderStatus = setInterval(() => {
+            const charts = document.querySelectorAll('.mermaid svg');
+            renderedCount = charts.length;
+
+            if (renderedCount === totalCharts) {
+                statusEl.textContent = `✓ 所有流程圖載入完成 (${renderedCount}/${totalCharts})`;
+                statusEl.classList.remove('error');
+                clearInterval(checkRenderStatus);
+            } else if (renderedCount > 0) {
+                statusEl.textContent = `載入中... (${renderedCount}/${totalCharts})`;
+            }
+        }, 500);
+
+        // 超時檢查
+        setTimeout(() => {
+            if (renderedCount < totalCharts) {
+                statusEl.textContent = `⚠ 部分流程圖載入失敗 (${renderedCount}/${totalCharts})`;
+                statusEl.classList.add('error');
+                clearInterval(checkRenderStatus);
+
+                // 顯示詳細錯誤信息
+                console.error('未能完全渲染的流程圖數量:', totalCharts - renderedCount);
+
+                // 檢查哪些圖表沒有渲染
+                const sections = document.querySelectorAll('.flowchart-section');
+                sections.forEach((section, index) => {
+                    const svg = section.querySelector('.mermaid svg');
+                    if (!svg) {
+                        console.error(`流程圖 ${index + 1} 渲染失敗:`, section.querySelector('h2').textContent);
+                    }
+                });
+            }
+        }, 15000); // 15秒超時
+
+        // 平滑滾動
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
