@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        /* 基本樣式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+        
+        /* 內容容器 */
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 標題樣式 */
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.25;
+            color: #2c3e50;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: #e74c3c;
+        }
+        
+        /* 段落和文字 */
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        
+        /* 程式碼樣式 */
+        code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 0.9em;
+            color: #e74c3c;
+        }
+        
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #ecf0f1;
+            font-size: 0.9rem;
+        }
+        
+        /* 列表樣式 */
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 引用塊 */
+        blockquote {
+            border-left: 4px solid #3498db;
+            padding: 10px 20px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            font-style: italic;
+            color: #555;
+        }
+        
+        /* 表格樣式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        /* 連結樣式 */
+        a {
+            color: #3498db;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover {
+            color: #2980b9;
+            border-bottom-color: #2980b9;
+        }
+        
+        /* Mermaid 圖表容器 */
+        .mermaid {
+            text-align: center;
+            margin: 30px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+        }
+        
+        /* 水平線 */
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #3498db, transparent);
+            margin: 2rem 0;
+        }
+        
+        /* 圖片樣式 */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+        
+        /* 目錄樣式 */
+        .toc {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .toc ul {
+            list-style-type: none;
+            margin-left: 0;
+        }
+        
+        .toc a {
+            color: #495057;
+            text-decoration: none;
+        }
+        
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* 程式碼高亮樣式 */
+        .codehilite {
+            background: #2c3e50;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        
+        .codehilite pre {
+            background: transparent;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="1630">16:30 板橋 → 北美館 → 美麗華 → 摩天輪 → 回板橋（全程捷運）<a class="headerlink" href="#1630" title="Permanent link">&para;</a></h1>
+<h2 id="1630_1">🚇 16:30｜板橋 → 北美館<a class="headerlink" href="#1630_1" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>板橋 → 台北車站（板南線）</strong>  </li>
+<li>往南港展覽館方向  </li>
+<li>
+<p>車程：約 10 分鐘</p>
+</li>
+<li>
+<p><strong>台北車站 → 圓山（紅線）</strong>  </p>
+</li>
+<li>往淡水方向  </li>
+<li>
+<p>車程：約 7 分鐘</p>
+</li>
+<li>
+<p><strong>圓山站 → 北美館</strong>  </p>
+</li>
+<li>出 1 號出口  </li>
+<li>步行 7–8 分鐘  </li>
+<li><strong>抵達：約 17:00–17:05</strong></li>
+</ol>
+<hr />
+<h2 id="17051800">🎨 17:05–18:00｜北美館看展<a class="headerlink" href="#17051800" title="Permanent link">&para;</a></h2>
+<ul>
+<li>主展＋館內走一圈  </li>
+<li>參觀時間約 45–55 分鐘</li>
+</ul>
+<hr />
+<h2 id="1800">🚇 18:00｜北美館 → 美麗華（劍南路）<a class="headerlink" href="#1800" title="Permanent link">&para;</a></h2>
+<ol>
+<li>走回圓山站（7–8 分鐘）  </li>
+<li><strong>圓山 → 劍南路（紅線往象山方向）</strong>  </li>
+<li>車程 10 分鐘  </li>
+<li>劍南路站 3 號出口 → 美麗華  </li>
+<li>步行 3–5 分鐘  </li>
+<li><strong>抵達：約 18:25–18:30</strong></li>
+</ol>
+<hr />
+<h2 id="18301930">🍽 18:30–19:30｜美麗華 晚餐<a class="headerlink" href="#18301930" title="Permanent link">&para;</a></h2>
+<h3 id="_1">推薦餐廳<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✔ <strong>欣葉小聚（台菜）</strong> — 最穩不踩雷  </li>
+<li>✔ <strong>Smith &amp; Wollensky（牛排）</strong> — 儀式感約會  </li>
+<li>✔ <strong>勝博殿 / 涓豆腐 / 美食街</strong> — 輕鬆方便</li>
+</ul>
+<hr />
+<h2 id="19302010">🎡 19:30–20:10｜美麗華摩天輪<a class="headerlink" href="#19302010" title="Permanent link">&para;</a></h2>
+<ul>
+<li>排隊約 5–10 分鐘  </li>
+<li>搭乘約 17 分鐘  </li>
+<li>夜景氣氛很好</li>
+</ul>
+<hr />
+<h2 id="2010">🚇 20:10｜美麗華 → 板橋<a class="headerlink" href="#2010" title="Permanent link">&para;</a></h2>
+<ol>
+<li>走回劍南路站（3–5 分鐘）  </li>
+<li><strong>劍南路 → 台北車站（紅線）</strong>  </li>
+<li>車程 12 分鐘  </li>
+<li><strong>台北車站 → 板橋（板南線）</strong>  </li>
+<li>車程 10 分鐘  </li>
+<li><strong>抵達：約 20:35–20:55</strong></li>
+</ol>
+<hr />
+    </div>
+    
+    <script>
+        // 初始化 Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+                fontSize: '16px'
+            }
+        });
+    </script>
+</body>
+</html>
